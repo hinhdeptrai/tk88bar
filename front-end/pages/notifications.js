@@ -13,15 +13,16 @@ const NotificationsPage = () => {
   // Lấy danh sách thông báo
   const fetchNotifications = async () => {
     try {
-      console.log('Session:', session); // Log session để debug
-      console.log('Access Token:', session?.user?.accessToken); // Log token
+      console.log('Session:', session);
+      console.log('Access Token:', session?.user?.accessToken);
+      console.log('API URL:', process.env.NEXT_PUBLIC_API_URL);
 
-      const response = await axios.get('http://localhost:8082/api/v1/notifications', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/notifications`, {
         headers: {
           Authorization: `Bearer ${session?.user?.accessToken}`
         }
       });
-      console.log('API Response:', response.data); // Log response
+      console.log('API Response:', response.data);
       setNotifications(response.data.data);
     } catch (error) {
       console.error('Lỗi khi lấy thông báo:', error);
@@ -34,7 +35,7 @@ const NotificationsPage = () => {
   const createSampleNotifications = async () => {
     try {
       await axios.post(
-        'http://localhost:8082/api/v1/notifications/create-samples',
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/notifications/create-samples`,
         {},
         {
           headers: {
@@ -53,7 +54,7 @@ const NotificationsPage = () => {
   const markAsRead = async (notificationId) => {
     try {
       await axios.put(
-        `http://localhost:8082/api/v1/notifications/${notificationId}/mark-read`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/notifications/${notificationId}/mark-read`,
         {},
         {
           headers: {
@@ -74,7 +75,7 @@ const NotificationsPage = () => {
   const deleteNotification = async (notificationId) => {
     try {
       await axios.delete(
-        `http://localhost:8082/api/v1/notifications/${notificationId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/notifications/${notificationId}`,
         {
           headers: {
             Authorization: `Bearer ${session?.user?.accessToken}`

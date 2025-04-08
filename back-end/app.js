@@ -1,11 +1,11 @@
+require('dotenv').config();
 const express = require("express");
-const dotenv = require("dotenv");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-dotenv.config({ path: "./config.env" });
-// dotenv.config({ path: "./docker.config.env" });
+const cors = require("cors");
+
 const app = express();
 const http = require("http");
 const { NotFoundError } = require("./utils/app_error");
@@ -23,23 +23,17 @@ const gameXucXac1PRouters = require("./routers/game.xucxac.1p.routers");
 const gameXucXac3PRouters = require("./routers/game.xucxac.3p.routers");
 const gameXocDia1PRouters = require("./routers/game.xocdia.1p.routers");
 const withdrawRouter = require('./routers/withdraw.router');
-const { clientEndpoint } = require("./configs/endpoint");
-const cors = require("cors");
-const authenticateUser = require('./middleware/authenticate');
 const notificationRouter = require('./routers/notification.router');
+const authenticateUser = require('./middleware/authenticate');
+
 //MIDDLEWARE
 app.use(cors({
-  origin: 'http://localhost:3002',
+  origin: ['http://159.223.94.32:3002', 'http://159.223.94.32:8082'],
   credentials: true
 }));
-app.options(clientEndpoint, cors());
+
 //security http
 app.use(helmet());
-
-//development logging
-// if (process.env.NODE_ENV === "development") {
-//   app.use(morgan("dev"));
-// }
 
 //limit request
 const limiter = rateLimit({
@@ -66,7 +60,6 @@ app.use(express.json());
 app.use(mongoSanitize());
 
 //against XSS (HTML, JS)
-app.use("/api/v1/admin", adminRouters);
 app.use(xss());
 
 //serving static file
@@ -82,6 +75,8 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.status(200).send("Server đang chạy thành công");
 });
+
+app.use("/api/v1/admin", adminRouters);
 app.use("/api/v1/hethong", heThongRouters);
 app.use("/api/v1/thongbao", thongBaoRouters);
 app.use("/api/v1/nguoidung", nguoiDungRouters);

@@ -1,9 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "next dev -p 3002 -H 159.223.94.32",
     "build": "npm install --force && set NODE_OPTIONS=--max_old_space_size=4096 && next build",
-    "start": "next start -p 3002"
+    "start": "next start -p 3002 -H 159.223.94.32"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^34.1.0",
